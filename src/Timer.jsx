@@ -1,5 +1,13 @@
-import React, { useEffect } from "react";
-import { interval, timer, takeUntil } from "rxjs";
+import React, { useEffect, useState } from "react";
+import {
+    map,
+    of,
+    interval,
+    timer,
+    takeUntil,
+    distinctUntilChanged,
+    switchMap,
+} from "rxjs";
 
 // onTimerElapsed (onWorkTimer reached zero)
 // onTimerDecrement
@@ -14,19 +22,6 @@ import { interval, timer, takeUntil } from "rxjs";
 // interval 1000s
 //
 
-const onOneSecTick = interval(1000);
-const now = new Date();
-const nextMinute = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    now.getHours(),
-    now.getMinutes(),
-    now.getSeconds() + 7
-);
-
-const timeCounterObservable = onOneSecTick.pipe(takeUntil(timer(nextMinute)));
-
 const useObservable = (observable, onItemReceived) => {
     useEffect(() => {
         let subscription = observable.subscribe((item) => {
@@ -36,9 +31,33 @@ const useObservable = (observable, onItemReceived) => {
     }, [observable, onItemReceived]);
 };
 
+const WORK_SECONDS = 5;
+
+const useTimer = (timerState) => {
+    const timerTick$ = of(timerState).pipe(
+        map((state) => state === "reset"),
+        // gated if value is equal to last value, otherwise return observable of the unique value (compared to last)
+        distinctUntilChanged(),
+        // https://blog.angular-university.io/rxjs-higher-order-mapping/
+        // Observable switching is all about ensuring that the unsubscription logic of unused Observables gets triggered, so that resources can be released!
+        // if a new observable start emitting values, unsubscribe from the previous Observable before subscribing to the new observable. Avoid memory leaks.
+        switchMap(isResetState => isResetState ? of(WORK_SECONDS))
+    );
+};
+
+const timerState = ["reset", "running", "paused"];
+
 const Timer = () => {
-    useObservable(timeCounterObservable, (item) => console.log(item));
-    return <div>I am timer</div>;
+    const [timerState, setTimerState] = useState("reset");
+    // const [secRemaining, setSecRemaining] = useState(WORK_WINDOW_SEC);
+    // useTimer(() => setSecRemaining(secRemaining - 1));
+    return (
+        <>
+            <h1>Pomodoro Timer</h1>
+            <p>Time remaining: {secRemaining}</p>
+            {secRemaining === 0 && <p>Time to rest!</p>}
+        </>
+    );
 };
 
 Timer.defaultProps = {};
