@@ -1,0 +1,32 @@
+{
+  "name": "rx-sample-tutorial",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "start": "vite",
+    "dev": "npm run start",
+    "build": "vite build",
+    "preview": "vite preview",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook",
+    "lint": "eslint src",
+    "pretty": "prettier --check --write \"src/**/*\""
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^6.2.2",
+    "rxjs": "^7.5.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.8",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7",
+    "@vitejs/plugin-react": "^1.0.7",
+    "babel-jest": "^27.5.1",
+    "eslint": "^8.16.0",
+    "eslint-plugin-react": "^7.30.0",
+    "prettier": "2.6.2",
+    "vite": "^2.8.0"
+  }
+}
