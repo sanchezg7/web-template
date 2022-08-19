@@ -9,9 +9,14 @@ import {
     withLatestFrom,
     take,
     filter,
-    scan
+    scan,
+    scheduled,
 } from "rxjs";
-import {pluckFirst, useObservableState, useObservable} from "observable-hooks";
+import {
+    pluckFirst,
+    useObservableState,
+    useObservable,
+} from "observable-hooks";
 
 // onTimerElapsed (onWorkTimer reached zero)
 // onTimerDecrement
@@ -39,27 +44,32 @@ const Timer = () => {
     // subscribe to the change in the timerState observable
     const timerTick$ = useObservable(() =>
         timerState$.pipe(
-            map(timerState => timerState === "reset"),
+            map((timerState) => timerState === "reset"),
             // true or false. Only when toggled.
             distinctUntilChanged(),
-            switchMap(isResetState =>
+            switchMap((isResetState) =>
                 isResetState
                     ? of(WORK_SECONDS)
-                    : of(animationFrameScheduler.now(), animationFrameScheduler).pipe(
-                        // Yield an observable that resubscribes to the source stream when the source stream completes
-                        repeat(),
-                        map(startTime => ~~((Date.now() - startTime) / 1000)),
-                        // tick per 1000 ms (1 sec)
-                        distinctUntilChanged(),
-                        // grab the observable to implement pause logic
-                        withLatestFrom(timerState$),
-                        // continue only if the timer is running
-                        filter(([, timerState]) => timerState === "running"),
-                        // Take the amount of items specified. If below the take, go to next item. Otherwise, complete the Observable
-                        take(WORK_SECONDS),
-                        // If we got here, calculate how many seconds left
-                        scan(timeLeft => timeLeft - 1, WORK_SECONDS)
-                    )
+                    : scheduled(
+                          [animationFrameScheduler.now()],
+                          animationFrameScheduler
+                      ).pipe(
+                          // Yield an observable that resubscribes to the source stream when the source stream completes
+                          repeat(),
+                          // tick per 1000 ms (1 sec)
+                          map(
+                              (startTime) => ~~((Date.now() - startTime) / 1000)
+                          ),
+                          distinctUntilChanged(),
+                          // grab the observable to implement pause logic
+                          withLatestFrom(timerState$),
+                          // continue only if the timer is running
+                          filter(([, timerState]) => timerState === "running"),
+                          // Continue to take up to the amount of seconds specified. Otherwise, mark the Observable as complete.
+                          take(WORK_SECONDS),
+                          // observable is still emitting, yield calculate how many seconds left (aggregate)
+                          scan((timeLeft) => timeLeft - 1, WORK_SECONDS)
+                      )
             )
         )
     );
