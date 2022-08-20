@@ -54,20 +54,21 @@ const Timer = () => {
                           [animationFrameScheduler.now()],
                           animationFrameScheduler
                       ).pipe(
-                          // Yield an observable that resubscribes to the source stream when the source stream completes
+                          // Yield an observable that resubscribes to the source stream when the source stream completes. Will provide the same value (startTime)
                           repeat(),
-                          // tick per 1000 ms (1 sec)
+                          // yield the seconds elapsed "~~" gets the integer portion of it
                           map(
                               (startTime) => ~~((Date.now() - startTime) / 1000)
                           ),
+                          // drop the emission if unchanged since the last one, otherwise yield the next reducer in the pipeline
                           distinctUntilChanged(),
-                          // grab the observable to implement pause logic
+                          // bring the latest timerState emission in scope to leverage logic in the pipeline for to implement pause logic
                           withLatestFrom(timerState$),
-                          // continue only if the timer is running
+                          // continue only if the timer is running, otherwise drop the emission
                           filter(([, timerState]) => timerState === "running"),
                           // Continue to take up to the amount of seconds specified. Otherwise, mark the Observable as complete.
                           take(WORK_SECONDS),
-                          // observable is still emitting, yield calculate how many seconds left (aggregate)
+                          // Based on the seed, apply a reducer function to yield a value
                           scan((timeLeft) => timeLeft - 1, WORK_SECONDS)
                       )
             )
