@@ -13,6 +13,7 @@
     "pretty": "prettier --check --write \"src/**/*\""
   },
   "dependencies": {
+    "daisyui": "^2.24.0",
     "observable-hooks": "^4.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -24,10 +25,13 @@
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
     "@vitejs/plugin-react": "^1.0.7",
+    "autoprefixer": "^10.4.8",
     "babel-jest": "^27.5.1",
     "eslint": "^8.16.0",
     "eslint-plugin-react": "^7.30.0",
+    "postcss": "^8.4.16",
     "prettier": "2.6.2",
+    "tailwindcss": "^3.1.8",
     "vite": "^3.0.9"
   }
 }

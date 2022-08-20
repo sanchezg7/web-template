@@ -13,3 +13,10 @@ Given two observables within the switchMap where observable 1 is emitting infini
 
 ## MergeMap
 Given two observables within a mergeMap where both observables are emitting infinitely and observable 1 and observable 2 are yielding a result, When the next emission from observable 2 happens, Then the mergeMap yields a result prior to awaiting the previous mergeMap intersection result to finish. 
+
+# Tailwinds installation
+https://tailwindcss.com/docs/installation
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init
+
+# DaisyUI Installation
