@@ -22,6 +22,7 @@ import Countdown from "../Countdown/Countdown";
 
 // onTimerIncrement (extend window)
 // onTimerWarning (e.g. 5 min left)
+// on spacebar select, on enter select
 
 const WORK_SECONDS = 25 * 60;
 
