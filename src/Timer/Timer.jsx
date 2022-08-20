@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import * as PropTypes from "prop-types";
 import {
     map,
@@ -27,7 +27,7 @@ import Countdown from "../Countdown/Countdown";
 
 const WORK_SECONDS = 25 * 60;
 
-const Timer = ({seconds = WORK_SECONDS}) => {
+const Timer = ({ seconds = WORK_SECONDS }) => {
     const [timerState, setTimerState] = useState(RESET);
     const handleStartTimer = () => {
         setTimerState(RUNNING);
@@ -76,6 +76,11 @@ const Timer = ({seconds = WORK_SECONDS}) => {
             setTimerState(RESET);
         }
     }, [secRemaining]);
+    const convenienceRef = useRef();
+    useEffect(() => {
+        convenienceRef.current.focus();
+    }, []);
+
     return (
         <>
             <div className="flex flex-col items-center">
@@ -83,6 +88,7 @@ const Timer = ({seconds = WORK_SECONDS}) => {
                 <Countdown className="content-center" seconds={secRemaining} />
                 {(timerState === RESET || timerState === PAUSED) && (
                     <button
+                        ref={convenienceRef}
                         className="btn btn-outline btn-success"
                         onClick={handleStartTimer}
                     >
@@ -104,7 +110,7 @@ const Timer = ({seconds = WORK_SECONDS}) => {
 
 Timer.defaultProps = {};
 Timer.propTypes = {
-    seconds: PropTypes.number.isRequired
+    seconds: PropTypes.number.isRequired,
 };
 
 export default Timer;
