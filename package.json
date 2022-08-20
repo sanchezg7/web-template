@@ -1,5 +1,5 @@
 {
-  "name": "rx-sample-tutorial",
+  "name": "pomodoro",
   "private": true,
   "version": "0.0.0",
   "scripts": {
@@ -17,8 +17,8 @@
     "classnames": "^2.3.1",
     "daisyui": "^2.24.0",
     "observable-hooks": "^4.2.0",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-router-dom": "^6.2.2",
     "rxjs": "^7.5.6"
   },
@@ -26,6 +26,7 @@
     "@babel/core": "^7.17.8",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
+    "@testing-library/react": "^13.3.0",
     "@vitejs/plugin-react": "^1.0.7",
     "autoprefixer": "^10.4.8",
     "babel-jest": "^27.5.1",

@@ -14,13 +14,13 @@ const Countdown = ({ seconds, className }) => {
         >
             <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
                 <span className="countdown font-mono text-5xl">
-                    <span style={{ "--value": mins }}></span>
+                    <span data-testid="minutes-left" aria-description={`${mins} minutes left`} style={{"--value": mins}}/>
                 </span>
                 min
             </div>
             <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
                 <span className="countdown font-mono text-5xl">
-                    <span style={{ "--value": secs }}></span>
+                    <span data-testid="seconds-left" style={{ "--value": secs }} />
                 </span>
                 sec
             </div>
@@ -32,7 +32,7 @@ Countdown.defaultProps = {
     className: "",
 };
 Countdown.propTypes = {
-    seconds: PropTypes.required,
+    seconds: PropTypes.number.isRequired,
     className: PropTypes.string,
 };
 

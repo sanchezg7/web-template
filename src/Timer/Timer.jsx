@@ -104,7 +104,7 @@ const Timer = ({seconds = WORK_SECONDS}) => {
 
 Timer.defaultProps = {};
 Timer.propTypes = {
-    seconds: PropTypes.number
+    seconds: PropTypes.number.isRequired
 };
 
 export default Timer;
