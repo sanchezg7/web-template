@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import * as PropTypes from "prop-types";
 import {
     map,
     of,
@@ -26,7 +27,7 @@ import Countdown from "../Countdown/Countdown";
 
 const WORK_SECONDS = 25 * 60;
 
-const Timer = () => {
+const Timer = ({seconds = WORK_SECONDS}) => {
     const [timerState, setTimerState] = useState(RESET);
     const handleStartTimer = () => {
         setTimerState(RUNNING);
@@ -44,7 +45,7 @@ const Timer = () => {
             distinctUntilChanged(),
             switchMap((isResetState) =>
                 isResetState
-                    ? of(WORK_SECONDS)
+                    ? of(seconds)
                     : scheduled(
                           [animationFrameScheduler.now()],
                           animationFrameScheduler
@@ -62,14 +63,14 @@ const Timer = () => {
                           // continue only if the timer is running, otherwise drop the emission
                           filter(([, timerState]) => timerState === RUNNING),
                           // Continue to take up to the amount of seconds specified. Otherwise, mark the Observable as complete.
-                          take(WORK_SECONDS),
+                          take(seconds),
                           // Based on the seed, apply a reducer function to yield a value
-                          scan((timeLeft) => timeLeft - 1, WORK_SECONDS)
+                          scan((timeLeft) => timeLeft - 1, seconds)
                       )
             )
         )
     );
-    const secRemaining = useObservableState(timerTick$, WORK_SECONDS);
+    const secRemaining = useObservableState(timerTick$, seconds);
     useEffect(() => {
         if (secRemaining === 0) {
             setTimerState(RESET);
@@ -102,6 +103,8 @@ const Timer = () => {
 };
 
 Timer.defaultProps = {};
-Timer.propTypes = {};
+Timer.propTypes = {
+    seconds: PropTypes.number
+};
 
 export default Timer;
