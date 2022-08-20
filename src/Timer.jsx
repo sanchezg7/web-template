@@ -17,6 +17,8 @@ import {
     useObservableState,
     useObservable,
 } from "observable-hooks";
+import { PAUSED, RUNNING, RESET } from "./Timer";
+import Countdown from "./Countdown";
 
 // onTimerElapsed (onWorkTimer reached zero)
 // onTimerDecrement
@@ -33,10 +35,8 @@ import {
 
 const WORK_SECONDS = 5 + 1;
 
-const timerState = ["reset", "running", "paused"];
-
 const Timer = () => {
-    const [timerState] = useState("running");
+    const [timerState] = useState(RUNNING);
     // const [secRemaining, setSecRemaining] = useState(WORK_WINDOW_SEC);
     // useTimer(() => setSecRemaining(secRemaining - 1));
     // pass timerState as a dependency array. When it changes it will emit a new item on the observable.
@@ -44,7 +44,7 @@ const Timer = () => {
     // subscribe to the change in the timerState observable
     const timerTick$ = useObservable(() =>
         timerState$.pipe(
-            map((timerState) => timerState === "reset"),
+            map((timerState) => timerState === RESET),
             // true or false. Only when toggled.
             distinctUntilChanged(),
             switchMap((isResetState) =>
@@ -65,7 +65,7 @@ const Timer = () => {
                           // bring the latest timerState emission in scope to leverage logic in the pipeline for to implement pause logic
                           withLatestFrom(timerState$),
                           // continue only if the timer is running, otherwise drop the emission
-                          filter(([, timerState]) => timerState === "running"),
+                          filter(([, timerState]) => timerState === RUNNING),
                           // Continue to take up to the amount of seconds specified. Otherwise, mark the Observable as complete.
                           take(WORK_SECONDS),
                           // Based on the seed, apply a reducer function to yield a value
@@ -78,35 +78,7 @@ const Timer = () => {
     return (
         <>
             <h1>Pomodoro Timer</h1>
-            <p>Time remaining: {secRemaining}</p>
-            {secRemaining === 0 && <p>Time to rest!</p>}
-
-            <div className="grid grid-flow-col gap-5 text-center auto-cols-max">
-                <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-                    <span className="countdown font-mono text-5xl">
-                        <span style={{ "--value": 15 }}></span>
-                    </span>
-                    days
-                </div>
-                <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-                    <span className="countdown font-mono text-5xl">
-                        {/*<span style="--value:10;"></span>*/}
-                    </span>
-                    hours
-                </div>
-                <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-                    <span className="countdown font-mono text-5xl">
-                        {/*<span style="--value:24;"></span>*/}
-                    </span>
-                    min
-                </div>
-                <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-                    <span className="countdown font-mono text-5xl">
-                        {/*<span style="--value:44;"></span>*/}
-                    </span>
-                    sec
-                </div>
-            </div>
+            <Countdown seconds={secRemaining} />
         </>
     );
 };
