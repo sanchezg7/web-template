@@ -17,31 +17,22 @@ import {
     useObservableState,
     useObservable,
 } from "observable-hooks";
-import { RUNNING, RESET } from "./timer.js";
+import { RUNNING, RESET, PAUSED } from "./timer.js";
 import Countdown from "../Countdown/Countdown";
 
-// onTimerElapsed (onWorkTimer reached zero)
-// onTimerDecrement
-// onTimerStart (restart as well)
 // onTimerIncrement (extend window)
 // onTimerWarning (e.g. 5 min left)
-// onPauseTimer
-// onResumeTimer
 
-// Work timer, rest timer
-
-// interval 1000s
-//
-
-const WORK_SECONDS = 5;
+const WORK_SECONDS = 25 * 60;
 
 const Timer = () => {
     const [timerState, setTimerState] = useState(RESET);
-    const onStartTimer = () => {
+    const handleStartTimer = () => {
         setTimerState(RUNNING);
     };
-    // const [secRemaining, setSecRemaining] = useState(WORK_WINDOW_SEC);
-    // useTimer(() => setSecRemaining(secRemaining - 1));
+    const handlePauseTimer = () => {
+        setTimerState(PAUSED);
+    };
     // pass timerState as a dependency array. When it changes it will emit a new item on the observable.
     const timerState$ = useObservable(pluckFirst, [timerState]);
     // subscribe to the change in the timerState observable
@@ -78,17 +69,32 @@ const Timer = () => {
         )
     );
     const secRemaining = useObservableState(timerTick$, WORK_SECONDS);
+    useEffect(() => {
+        if (secRemaining === 0) {
+            setTimerState(RESET);
+        }
+    }, [secRemaining]);
     return (
         <>
             <div className="flex flex-col items-center">
                 <h1>pomodoro.</h1>
                 <Countdown className="content-center" seconds={secRemaining} />
-                <button
-                    className="btn btn-outline btn-success"
-                    onClick={onStartTimer}
-                >
-                    Start
-                </button>
+                {(timerState === RESET || timerState === PAUSED) && (
+                    <button
+                        className="btn btn-outline btn-success"
+                        onClick={handleStartTimer}
+                    >
+                        start
+                    </button>
+                )}
+                {timerState === RUNNING && (
+                    <button
+                        className="btn btn-outline btn-info"
+                        onClick={handlePauseTimer}
+                    >
+                        pause
+                    </button>
+                )}
             </div>
         </>
     );

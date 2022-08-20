@@ -33,6 +33,7 @@ Countdown.defaultProps = {
 };
 Countdown.propTypes = {
     seconds: PropTypes.required,
+    className: PropTypes.string,
 };
 
 export default Countdown;
