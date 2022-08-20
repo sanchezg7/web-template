@@ -13,6 +13,7 @@
     "pretty": "prettier --check --write \"src/**/*\""
   },
   "dependencies": {
+    "classnames": "^2.3.1",
     "daisyui": "^2.24.0",
     "observable-hooks": "^4.2.0",
     "react": "^17.0.2",

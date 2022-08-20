@@ -17,8 +17,8 @@ import {
     useObservableState,
     useObservable,
 } from "observable-hooks";
-import { PAUSED, RUNNING, RESET } from "./Timer";
-import Countdown from "./Countdown";
+import { RUNNING, RESET } from "./timer.js";
+import Countdown from "../Countdown/Countdown";
 
 // onTimerElapsed (onWorkTimer reached zero)
 // onTimerDecrement
@@ -33,10 +33,13 @@ import Countdown from "./Countdown";
 // interval 1000s
 //
 
-const WORK_SECONDS = 5 + 1;
+const WORK_SECONDS = 5;
 
 const Timer = () => {
-    const [timerState] = useState(RUNNING);
+    const [timerState, setTimerState] = useState(RESET);
+    const onStartTimer = () => {
+        setTimerState(RUNNING);
+    };
     // const [secRemaining, setSecRemaining] = useState(WORK_WINDOW_SEC);
     // useTimer(() => setSecRemaining(secRemaining - 1));
     // pass timerState as a dependency array. When it changes it will emit a new item on the observable.
@@ -77,8 +80,16 @@ const Timer = () => {
     const secRemaining = useObservableState(timerTick$, WORK_SECONDS);
     return (
         <>
-            <h1>Pomodoro Timer</h1>
-            <Countdown seconds={secRemaining} />
+            <div className="flex flex-col items-center">
+                <h1>pomodoro.</h1>
+                <Countdown className="content-center" seconds={secRemaining} />
+                <button
+                    className="btn btn-outline btn-success"
+                    onClick={onStartTimer}
+                >
+                    Start
+                </button>
+            </div>
         </>
     );
 };
