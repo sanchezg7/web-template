@@ -96,19 +96,24 @@ const Timer = ({
             <div className="flex flex-col items-center">
                 {statusSprite({ "animate-ping": timerState === PAUSED })}
                 <Countdown className="py-6" seconds={secRemaining} />
-                <button
-                    ref={convenienceRef}
-                    className={cx({
-                        "btn btn-outline btn-success":
-                            timerState === RESET || timerState === PAUSED,
-                        "btn btn-outline btn-info": timerState === RUNNING,
-                    })}
-                    onClick={toggleTimer}
-                >
-                    {timerState === RESET || timerState === PAUSED
-                        ? "start"
-                        : "pause"}
-                </button>
+                <div className="grid grid-cols-2 gap-4">
+                    <button
+                        ref={convenienceRef}
+                        className={cx({
+                            "btn btn-outline btn-success":
+                                timerState === RESET || timerState === PAUSED,
+                            "btn btn-outline btn-info": timerState === RUNNING,
+                        })}
+                        onClick={toggleTimer}
+                    >
+                        {timerState === RESET || timerState === PAUSED
+                            ? "start"
+                            : "pause"}
+                    </button>
+                    <button className="btn">
+                        <img src="/src/reset.svg" />
+                    </button>
+                </div>
             </div>
         </>
     );
