@@ -21,8 +21,7 @@ const Pomodoro = () => {
         return;
     };
     return (
-        <div className="flex flex-col items-center">
-            <h1>pomodoro.</h1>
+        <div className="flex flex-col items-center pt-6">
             <Timer
                 seconds={seconds}
                 onTimerLapsed={onTimerLapsed}
