@@ -24,11 +24,14 @@ import Countdown from "../Countdown/Countdown";
 
 // onTimerIncrement (extend window)
 // onTimerWarning (e.g. 5 min left)
-// on spacebar select, on enter select
 
-const WORK_SECONDS = 25 * 60;
+const DEFAULT_WORK_SECONDS = 25 * 60;
 
-const Timer = ({ seconds = WORK_SECONDS }) => {
+const Timer = ({
+    seconds = DEFAULT_WORK_SECONDS,
+    onTimerLapsed,
+    statusSprite,
+}) => {
     const [timerState, setTimerState] = useState(RESET);
     // pass timerState as a dependency array. When it changes it will emit a new item on the observable.
     const timerState$ = useObservable(pluckFirst, [timerState]);
@@ -65,10 +68,14 @@ const Timer = ({ seconds = WORK_SECONDS }) => {
             )
         )
     );
+    const handleOnTimerLapsed = () => {
+        setTimerState(RESET);
+        onTimerLapsed(timerState);
+    };
     const secRemaining = useObservableState(timerTick$, seconds);
     useEffect(() => {
         if (secRemaining === 0) {
-            setTimerState(RESET);
+            handleOnTimerLapsed();
         }
     }, [secRemaining]);
     const convenienceRef = useRef();
@@ -87,7 +94,7 @@ const Timer = ({ seconds = WORK_SECONDS }) => {
     return (
         <>
             <div className="flex flex-col items-center">
-                <h1>pomodoro.</h1>
+                {statusSprite({ "animate-ping": timerState === PAUSED })}
                 <Countdown className="content-center" seconds={secRemaining} />
                 <button
                     ref={convenienceRef}
@@ -110,6 +117,8 @@ const Timer = ({ seconds = WORK_SECONDS }) => {
 Timer.defaultProps = {};
 Timer.propTypes = {
     seconds: PropTypes.number.isRequired,
+    onTimerLapsed: PropTypes.func,
+    statusSprite: PropTypes.func,
 };
 
 export default Timer;

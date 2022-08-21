@@ -1,14 +1,14 @@
 import React from "react";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
-import Timer from "./Timer/Timer";
+import Pomodoro from "./Pomodoro/Pomodoro";
 
 function App() {
     return (
         <>
             <HashRouter>
                 <Routes>
-                    <Route path="/" element={<Timer />} />
+                    <Route path="/" element={<Pomodoro />} />
                 </Routes>
             </HashRouter>
         </>
