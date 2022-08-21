@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as PropTypes from "prop-types";
+import cx from "classnames";
 import {
     map,
     of,
@@ -29,12 +30,6 @@ const WORK_SECONDS = 25 * 60;
 
 const Timer = ({ seconds = WORK_SECONDS }) => {
     const [timerState, setTimerState] = useState(RESET);
-    const handleStartTimer = () => {
-        setTimerState(RUNNING);
-    };
-    const handlePauseTimer = () => {
-        setTimerState(PAUSED);
-    };
     // pass timerState as a dependency array. When it changes it will emit a new item on the observable.
     const timerState$ = useObservable(pluckFirst, [timerState]);
     // subscribe to the change in the timerState observable
@@ -81,28 +76,32 @@ const Timer = ({ seconds = WORK_SECONDS }) => {
         convenienceRef.current.focus();
     }, []);
 
+    const toggleTimer = () => {
+        if (timerState === RESET || timerState === PAUSED) {
+            setTimerState(RUNNING);
+            return;
+        }
+
+        setTimerState(PAUSED);
+    };
     return (
         <>
             <div className="flex flex-col items-center">
                 <h1>pomodoro.</h1>
                 <Countdown className="content-center" seconds={secRemaining} />
-                {(timerState === RESET || timerState === PAUSED) && (
-                    <button
-                        ref={convenienceRef}
-                        className="btn btn-outline btn-success"
-                        onClick={handleStartTimer}
-                    >
-                        start
-                    </button>
-                )}
-                {timerState === RUNNING && (
-                    <button
-                        className="btn btn-outline btn-info"
-                        onClick={handlePauseTimer}
-                    >
-                        pause
-                    </button>
-                )}
+                <button
+                    ref={convenienceRef}
+                    className={cx({
+                        "btn btn-outline btn-success":
+                            timerState === RESET || timerState === PAUSED,
+                        "btn btn-outline btn-info": timerState === RUNNING,
+                    })}
+                    onClick={toggleTimer}
+                >
+                    {timerState === RESET || timerState === PAUSED
+                        ? "start"
+                        : "pause"}
+                </button>
             </div>
         </>
     );
