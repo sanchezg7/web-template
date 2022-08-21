@@ -21,6 +21,7 @@ import {
 } from "observable-hooks";
 import { RUNNING, RESET, PAUSED } from "./timer.js";
 import Countdown from "../Countdown/Countdown";
+import reset from "../reset.svg";
 
 // onTimerIncrement (extend window)
 // onTimerWarning (e.g. 5 min left)
@@ -118,7 +119,7 @@ const Timer = ({
                             onTimerReset();
                         }}
                     >
-                        <img src="/src/reset.svg" />
+                        <img src={reset} alt="reset timer" />
                     </button>
                 </div>
             </div>
