@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
+import * as PropTypes from "prop-types";
+import cx from "classnames";
 import {
     map,
     of,
@@ -22,18 +24,16 @@ import Countdown from "../Countdown/Countdown";
 
 // onTimerIncrement (extend window)
 // onTimerWarning (e.g. 5 min left)
-// on spacebar select, on enter select
 
-const WORK_SECONDS = 25 * 60;
+const DEFAULT_WORK_SECONDS = 25 * 60;
 
-const Timer = () => {
+const Timer = ({
+    seconds = DEFAULT_WORK_SECONDS,
+    onTimerLapsed,
+    onTimerReset,
+    statusSprite,
+}) => {
     const [timerState, setTimerState] = useState(RESET);
-    const handleStartTimer = () => {
-        setTimerState(RUNNING);
-    };
-    const handlePauseTimer = () => {
-        setTimerState(PAUSED);
-    };
     // pass timerState as a dependency array. When it changes it will emit a new item on the observable.
     const timerState$ = useObservable(pluckFirst, [timerState]);
     // subscribe to the change in the timerState observable
@@ -44,7 +44,7 @@ const Timer = () => {
             distinctUntilChanged(),
             switchMap((isResetState) =>
                 isResetState
-                    ? of(WORK_SECONDS)
+                    ? of(seconds)
                     : scheduled(
                           [animationFrameScheduler.now()],
                           animationFrameScheduler
@@ -62,46 +62,76 @@ const Timer = () => {
                           // continue only if the timer is running, otherwise drop the emission
                           filter(([, timerState]) => timerState === RUNNING),
                           // Continue to take up to the amount of seconds specified. Otherwise, mark the Observable as complete.
-                          take(WORK_SECONDS),
+                          take(seconds),
                           // Based on the seed, apply a reducer function to yield a value
-                          scan((timeLeft) => timeLeft - 1, WORK_SECONDS)
+                          scan((timeLeft) => timeLeft - 1, seconds)
                       )
             )
         )
     );
-    const secRemaining = useObservableState(timerTick$, WORK_SECONDS);
+    const handleOnTimerLapsed = () => {
+        setTimerState(RESET);
+        onTimerLapsed(timerState);
+    };
+    const secRemaining = useObservableState(timerTick$, seconds);
     useEffect(() => {
         if (secRemaining === 0) {
-            setTimerState(RESET);
+            handleOnTimerLapsed();
         }
     }, [secRemaining]);
+    const convenienceRef = useRef();
+    useEffect(() => {
+        convenienceRef.current.focus();
+    }, []);
+
+    const toggleTimer = () => {
+        if (timerState === RESET || timerState === PAUSED) {
+            setTimerState(RUNNING);
+            return;
+        }
+
+        setTimerState(PAUSED);
+    };
     return (
         <>
             <div className="flex flex-col items-center">
-                <h1>pomodoro.</h1>
-                <Countdown className="content-center" seconds={secRemaining} />
-                {(timerState === RESET || timerState === PAUSED) && (
+                {statusSprite({ "animate-ping": timerState === PAUSED })}
+                <Countdown className="py-6" seconds={secRemaining} />
+                <div className="grid grid-cols-2 gap-4">
                     <button
-                        className="btn btn-outline btn-success"
-                        onClick={handleStartTimer}
+                        ref={convenienceRef}
+                        className={cx({
+                            "btn btn-outline btn-success":
+                                timerState === RESET || timerState === PAUSED,
+                            "btn btn-outline btn-info": timerState === RUNNING,
+                        })}
+                        onClick={toggleTimer}
                     >
-                        start
+                        {timerState === RESET || timerState === PAUSED
+                            ? "start"
+                            : "pause"}
                     </button>
-                )}
-                {timerState === RUNNING && (
                     <button
-                        className="btn btn-outline btn-info"
-                        onClick={handlePauseTimer}
+                        className="btn"
+                        onClick={() => {
+                            setTimerState(RESET);
+                            onTimerReset();
+                        }}
                     >
-                        pause
+                        <img src="/src/reset.svg" />
                     </button>
-                )}
+                </div>
             </div>
         </>
     );
 };
 
 Timer.defaultProps = {};
-Timer.propTypes = {};
+Timer.propTypes = {
+    seconds: PropTypes.number.isRequired,
+    onTimerLapsed: PropTypes.func,
+    onTimerReset: PropTypes.func,
+    statusSprite: PropTypes.func,
+};
 
 export default Timer;
