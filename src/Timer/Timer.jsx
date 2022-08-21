@@ -30,6 +30,7 @@ const DEFAULT_WORK_SECONDS = 25 * 60;
 const Timer = ({
     seconds = DEFAULT_WORK_SECONDS,
     onTimerLapsed,
+    onTimerReset,
     statusSprite,
 }) => {
     const [timerState, setTimerState] = useState(RESET);
@@ -110,7 +111,13 @@ const Timer = ({
                             ? "start"
                             : "pause"}
                     </button>
-                    <button className="btn">
+                    <button
+                        className="btn"
+                        onClick={() => {
+                            setTimerState(RESET);
+                            onTimerReset();
+                        }}
+                    >
                         <img src="/src/reset.svg" />
                     </button>
                 </div>
@@ -123,6 +130,7 @@ Timer.defaultProps = {};
 Timer.propTypes = {
     seconds: PropTypes.number.isRequired,
     onTimerLapsed: PropTypes.func,
+    onTimerReset: PropTypes.func,
     statusSprite: PropTypes.func,
 };
 

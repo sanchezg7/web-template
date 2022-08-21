@@ -20,11 +20,15 @@ const Pomodoro = () => {
         setIntervalType(WORK);
         return;
     };
+    const onTimerReset = () => {
+        setIntervalType(WORK);
+    };
     return (
         <div className="flex flex-col items-center pt-6">
             <Timer
                 seconds={seconds}
                 onTimerLapsed={onTimerLapsed}
+                onTimerReset={onTimerReset}
                 statusSprite={(className) => (
                     <span
                         className={cx(
