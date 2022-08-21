@@ -26,16 +26,18 @@ const Pomodoro = () => {
             <Timer
                 seconds={seconds}
                 onTimerLapsed={onTimerLapsed}
-                statusSprite={(className) => {
-                    return (
-                        <span
-                            className={cx(
-                                className,
-                                "inline-flex rounded-full h-3 w-3 bg-sky-500"
-                            )}
-                        ></span>
-                    );
-                }}
+                statusSprite={(className) => (
+                    <span
+                        className={cx(
+                            className,
+                            "inline-flex rounded-full h-3 w-3",
+                            {
+                                "bg-sky-500": intervalType === WORK,
+                                "bg-gray-50": intervalType === REST,
+                            }
+                        )}
+                    ></span>
+                )}
             />
         </div>
     );
