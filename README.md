@@ -20,3 +20,6 @@ npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init
 
 # DaisyUI Installation
+
+# Clone project example
+rsync -av --progress web-template/* ./titan-thunder-website/ --exclude .git --exclude node_modules/ --exclude *idea --exclude docs
