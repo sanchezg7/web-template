@@ -5,7 +5,7 @@ Lightweight template for UI projects.
 - git clone <repo url> project-name
 
 ## Clone from local
-- rsync -av --progress web-template/* ./titan-thunder-website/ --exclude .git --exclude node_modules/ --exclude *idea --exclude docs
+- rsync -av --progress web-template/* ./titan-thunder-website/ --exclude '.git' --exclude node_modules/ --exclude *idea --exclude docs
 - git init
 
 ## Tailwinds installation
