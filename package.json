@@ -14,8 +14,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "classnames": "^2.3.1",
-    "daisyui": "^2.24.0",
+    "classnames": "^2.3.2",
+    "daisyui": "^3.7.7",
     "observable-hooks": "^4.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
