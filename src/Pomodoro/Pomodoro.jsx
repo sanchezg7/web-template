@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import cx from "classnames";
-import Timer from "../Timer/Timer";
+import Timer from "../Timer/Timer.jsx";
 import { WORK, REST, WORK_SECONDS, REST_SECONDS } from "./pomodoro";
 
 const Pomodoro = () => {
