@@ -2,8 +2,8 @@
 Lightweight template for UI projects.
 
 ## Smoke test
-- `npm i`
-- `npm run start`
+- `yarn install`
+- `yarn start`
 
 ## Clone from github
 - git clone <repo url> project-name
