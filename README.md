@@ -12,7 +12,7 @@ The purpose of this project is to serve as a lightweight starter for web applica
 
 ## Clone from local
 If you already have the project from git, use it to clone into your new project directory
-- `rsync -av --progress web-template/* ./<new-project-dir>/ --exclude '.git' --exclude node_modules/ --exclude *idea --exclude docs`
+- `rsync -av --progress web-template/* ./<new-project-dir>/ --exclude '.git' --exclude 'node_modules/' --exclude '*idea' --exclude 'docs'`
 - `git init`
 
 ## Tailwinds installation
