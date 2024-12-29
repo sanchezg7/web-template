@@ -1,13 +1,13 @@
 import React from "react";
-import { act, render, fireEvent } from "@testing-library/react";
+import { act, render, fireEvent, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import Timer from "./Timer";
+import Timer from "./Timer.jsx";
 
 describe("Timer", () => {
     describe("Iteration Window", () => {
         test("Given a window, When render, Then user is prompted to start is yielded", () => {
-            const { getByText } = render(<Timer seconds={2} />);
-            getByText("start");
+            render(<Timer seconds={2} />);
+            screen.getByText("start");
         });
         test("Given a 2 second window, When render, Then duration is yielded", () => {
             const { getByTestId } = render(<Timer seconds={2} />);

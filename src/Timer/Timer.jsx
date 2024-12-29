@@ -96,7 +96,7 @@ const Timer = ({
     return (
         <>
             <div className="flex flex-col items-center">
-                {statusSprite({ "animate-ping": timerState === PAUSED })}
+                {statusSprite && statusSprite({ "animate-ping": timerState === PAUSED })}
                 <Countdown className="py-6" seconds={secRemaining} />
                 <div className="grid grid-cols-2 gap-4">
                     <button
