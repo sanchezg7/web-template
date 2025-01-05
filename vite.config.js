@@ -8,6 +8,7 @@ export default defineConfig({
         outDir: "./docs",
     },
     server: {
+        open: true,
         watch: {
             // limitation of WSL2 - https://vitejs.dev/config/#server-watch
             // This is not needed if working out of WSL drive
