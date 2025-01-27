@@ -8,5 +8,6 @@ export default {
     "testEnvironment": "jsdom",
     moduleNameMapper: {
         '\\.svg$': '<rootDir>/src/__mocks__/svgMock.js',
-    }
+    },
+    "reporters": ["default", "jest-stare"]
 };
